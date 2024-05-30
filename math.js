@@ -1,5 +1,5 @@
 // Globals bad but for now
-let displayValue = "";
+let operations = "";
 
 let values = {
     a: 0,
@@ -36,28 +36,44 @@ function operate(a, operator, b) {
             return multiply(a, b);
         case "/":
             return divide(a, b);
+        default:
+            return b;
     }
 }
 
 function changeDisplay(button, value) {
     const display = document.querySelector(".display-value");
-
+    const lastChar = operations.charAt(operations.length - 1);
     if (display.innerHTML === "0") {
         display.innerHTML = value;
-        displayValue = value;
+        operations = value;
     } else if( (value === "/") || (value === "*") || (value === "+") || (value === "-") ) {
-        setValues(display.innerHTML, value);
+        // IMPLEMENT: if there is already a operator, change it to the new one
+        if( (lastChar === "/") || (lastChar === "*") || (lastChar === "+") || (lastChar === "-") ) {
+            operations = operations.replace(lastChar, value);
+        } else {
+            operations = operations.concat(value);
+        }
+        console.log(`The operations: ${operations}`)
+        display.innerHTML = setValues(display.innerHTML, value);
+    } else if (value === "=") {
+        display.innerHTML = setValues(display.innerHTML, value);
+        operations = display.innerHTML;
     } else if (value === "C") {
         display.innerHTML = "0";
         // reset operation tracking
         values.a = 0;
         values.b = 0;
         values.op = "";
+        operations = "";
+    } else if( (lastChar === "/") || (lastChar === "*") || (lastChar === "+") || (lastChar === "-") ) {
+        operations = "".concat(value);
+        display.innerHTML = operations;
     } else {
         display.innerHTML = display.innerHTML.concat(value);
-        displayValue = display.innerHTML;
+        operations = display.innerHTML;
     }
-
+    console.log(operations)
 }
 
 function highlightOperator () {
@@ -76,19 +92,24 @@ buttons.forEach((button) => {
 // if it does, set the value of b, perform operate.
 // Then set the new value of a to the result, and set the new operator to the give operator.
 function setValues(value, operator) {
-    if(values.a === 0) {
+    let result = value;
+    if (operator === "=") {
+        console.log(values)
+        result = operate(values.a, values.op, Number(value)).toFixed(3);
+        values.a = result;
+        values.op = "";
+    } else if(values.a === 0) {
         values.a = Number(value);
         values.op = operator;
-    } else if (operator === "=") {
-        values.b = Number(value);
-        const result = operate(values.a, values. op, values.b);
     } else {
         values.b = Number(value);
-        const result = operate(values.a, values. op, values.b);
+        result = operate(values.a, values. op, values.b).toFixed(3);
         values.a = result;
         values.op = operator;
     }
+
     console.log(values);
+    return result
 }
 
 /*
