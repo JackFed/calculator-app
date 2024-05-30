@@ -4,7 +4,8 @@ let operations = "";
 let values = {
     a: 0,
     b: 0,
-    op: ""
+    op: "",
+    opId: ""
 }
 
 function add(a, b) {
@@ -41,13 +42,10 @@ function operate(a, operator, b) {
     }
 }
 
-function changeDisplay(button, value) {
+function changeDisplay(value) {
     const display = document.querySelector(".display-value");
     const lastChar = operations.charAt(operations.length - 1);
-    if (display.innerHTML === "0") {
-        display.innerHTML = value;
-        operations = value;
-    } else if( (value === "/") || (value === "*") || (value === "+") || (value === "-") ) {
+    if( (value === "/") || (value === "*") || (value === "+") || (value === "-") ) {
         // IMPLEMENT: if there is already a operator, change it to the new one
         if( (lastChar === "/") || (lastChar === "*") || (lastChar === "+") || (lastChar === "-") ) {
             operations = operations.replace(lastChar, value);
@@ -66,9 +64,6 @@ function changeDisplay(button, value) {
         values.b = 0;
         values.op = "";
         operations = "";
-    } else if( (lastChar === "/") || (lastChar === "*") || (lastChar === "+") || (lastChar === "-") ) {
-        operations = "".concat(value);
-        display.innerHTML = operations;
     } else {
         display.innerHTML = display.innerHTML.concat(value);
         operations = display.innerHTML;
@@ -76,14 +71,26 @@ function changeDisplay(button, value) {
     console.log(operations)
 }
 
-function highlightOperator () {
-    return;
-}
+const numbers = document.querySelectorAll(".number");
+numbers.forEach((number) => {
+    number.addEventListener("click", () => {
+        changeDisplay(number.innerHTML);
+    });
+})
 
-const buttons = document.querySelectorAll("button");
-buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-        changeDisplay(button, button.innerHTML);
+
+
+const operators = document.querySelectorAll(".operator");
+operators.forEach((op) => {
+    op.addEventListener("click", () => {
+        if (values.op !== op.innerHTML && values.op !== "") {
+            document.querySelector(`#${values.opId}`).classList.remove("press");
+        }
+        values.op = op.innerHTML;
+        values.opId = op.id;
+        op.classList.add("press");
+        
+        console.log(values.op)
     });
 })
 
@@ -102,8 +109,9 @@ function setValues(value, operator) {
         values.a = Number(value);
         values.op = operator;
     } else {
+        console.log(`Before equals: ${values}`);
         values.b = Number(value);
-        result = operate(values.a, values. op, values.b).toFixed(3);
+        result = operate(values.a, values.op, values.b).toFixed(3);
         values.a = result;
         values.op = operator;
     }

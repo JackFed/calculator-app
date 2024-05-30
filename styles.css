@@ -17,8 +17,8 @@ body {
 button {
     background-color: #5BC0BE;
     border-radius: 50%;
-    width: 33%;
-    height: 33%;
+    width: 20%;
+    height: 20%;
 }
 
 .calculator {
@@ -69,7 +69,6 @@ button {
     gap: 5px;
 }
 
-.number {
-    width: 20%;
-    height: 20%;
+.press {
+    background-color: #5bc0be8e;
 }
