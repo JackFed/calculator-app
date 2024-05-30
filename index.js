@@ -22,14 +22,22 @@ function subtract(a, b) {
 }
 
 function multiply(a, b) {
-    return a * b;
+    p = a * b
+    if (p % 1 !== 0) { // if the product has decimals, truncate.
+        p = p.toPrecision(2);
+    }
+    return p;
 }
 
 function divide(a, b) {
     if (b === 0) {
         return 5138008;
     }
-    return a / b;
+    q = a / b
+    if (q % 1 !== 0) { // if the quotient has decimals, truncate.
+        q = q.toPrecision(2);
+    }
+    return q;
 }
 
 function operate(a, operator, b) {
